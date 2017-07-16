@@ -1,7 +1,11 @@
 package com.xgtlabs.product;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -15,13 +19,25 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemStream;
+import org.springframework.batch.item.NonTransientResourceException;
+import org.springframework.batch.item.ParseException;
+import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.batch.test.JobLauncherTestUtils;
+import org.springframework.batch.test.MetaDataInstanceFactory;
+import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import com.xgtlabs.product.bo.CatalogBO;
 import com.xgtlabs.product.config.BatchConfiguration;
 import com.xgtlabs.product.config.ProductJob;
 
@@ -33,6 +49,8 @@ import com.xgtlabs.product.config.ProductJob;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(classes= {BatchConfiguration.class, ProductJob.class})
+@TestExecutionListeners( {DependencyInjectionTestExecutionListener.class, 
+	StepScopeTestExecutionListener.class } )
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource("classpath:test.properties")
 public class ProductJobTest {
@@ -42,6 +60,10 @@ public class ProductJobTest {
 	private static final String DATABASE_TO_CSV_JOB = "dataBaseToCsvJob";
 	private static final int EXPECTED_READ_COUNT = 2;
 	private static final int EXPECTED_WRITE_COUNT = 2;
+	private static final String ITEM_NUMBER = "QWZ5671";
+	
+	@Autowired
+	Environment environment;
 	
 	@Autowired
     private JobLauncher jobLauncher;
@@ -53,6 +75,9 @@ public class ProductJobTest {
 	@Qualifier(DATABASE_TO_CSV_JOB)
 	Job job;
     
+    @Autowired
+    private ItemReader<CatalogBO> reader;
+    
 	private JobLauncherTestUtils jobLauncherTestUtils;
 		
 	
@@ -63,17 +88,40 @@ public class ProductJobTest {
 	 */
 	@Before
 	public void setUp() throws Exception { 
+		  
 		this.jobLauncherTestUtils = new JobLauncherTestUtils();
 	    this.jobLauncherTestUtils.setJobLauncher(this.jobLauncher);
 	    this.jobLauncherTestUtils.setJobRepository(this.jobRepository);
 	    this.jobLauncherTestUtils.setJob(this.job);
+	    
     } 
 	
 	/**
-	 * test de la step dataBaseToCsvStep du job dataBaseToCsvJob
+	 * test du reader de la step dataBaseToCsvStep
+	 * @throws Exception 
+	 * @throws NonTransientResourceException 
+	 * @throws ParseException 
+	 * @throws UnexpectedInputException 
 	 */
 	@Test
-	public void test1DataBaseToCsvStep() {
+	public void test1Reader() throws UnexpectedInputException, ParseException, NonTransientResourceException, Exception {
+		
+		((ItemStream) this.reader).open(new ExecutionContext());
+		
+		CatalogBO catalog = this.reader.read();
+		
+		assertNotNull(catalog);
+		assertEquals(ITEM_NUMBER, catalog.getItemNumber());
+		
+		((ItemStream) this.reader).close();
+	}
+	
+	
+	/**
+	 * test de la step dataBaseToCsvStep
+	 */
+	@Test
+	public void test3DataBaseToCsvStep() {
 		JobExecution jobExecution = this.jobLauncherTestUtils.launchStep(DATABASE_TO_CSV_STEP);
 		assertEquals("dataBaseToCsvStep", BatchStatus.COMPLETED, jobExecution.getStatus());
 		
@@ -88,4 +136,40 @@ public class ProductJobTest {
 			
 		}
 	}
+	
+	/**
+	 * test du job dataBaseToCsvJob
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void test4launchJob() throws Exception {
+					
+		JobExecution jobExecution = this.jobLauncherTestUtils.launchJob();
+				
+		LOGGER.info("job {} instance Id: {}", DATABASE_TO_CSV_JOB, jobExecution.getJobInstance().getId());
+
+		assertEquals("Job status", BatchStatus.COMPLETED, jobExecution.getStatus());
+			
+	}
+	
+	@After
+	public void tearDown(){
+	    
+	
+	    
+		LOGGER.info("suppression du fichier après l'exécution du test");
+		File destroyFile = new File(this.environment.getProperty("csv.out.file"));
+	    destroyFile.delete();
+		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public StepExecution getStepExection() {
+		StepExecution execution = MetaDataInstanceFactory.createStepExecution();
+        return execution;
+    }
 }
