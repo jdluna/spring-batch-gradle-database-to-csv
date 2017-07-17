@@ -78,7 +78,7 @@ CREATE SEQUENCE product.r_catalog_size_color_id_seq MAXVALUE 9223372036854775807
 ALTER TABLE product.r_catalog_size_color ALTER COLUMN id SET DEFAULT nextval('product.r_catalog_size_color_id_seq');
 ALTER SEQUENCE product.r_catalog_size_color_id_seq OWNED BY product.r_catalog_size_color.id;
 
-/*INSERT INTO product (description, product_image)
+INSERT INTO product (description, product_image)
 VALUES ('Cardigan Sweater', 'cardigan.jpg');
 
 INSERT INTO genre (libelle)
@@ -159,4 +159,4 @@ INSERT INTO r_catalog_size_color (fk_catalog_item_id, fk_size_id, fk_color_swatc
 VALUES (2, 4, 2);
 
 INSERT INTO r_catalog_size_color (fk_catalog_item_id, fk_size_id, fk_color_swatch_id)
-VALUES (2, 4, 4);*/
+VALUES (2, 4, 4);

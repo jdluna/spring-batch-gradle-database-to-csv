@@ -162,8 +162,6 @@ public class ProductJobTest {
 	@After
 	public void tearDown(){
 	    
-	
-	    
 		LOGGER.info("suppression du fichier après l'exécution du test");
 		File destroyFile = new File(this.environment.getProperty("csv.out.file"));
 	    destroyFile.delete();
