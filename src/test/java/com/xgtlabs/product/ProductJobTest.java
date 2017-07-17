@@ -37,8 +37,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseOperation;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.xgtlabs.product.bo.CatalogBO;
 import com.xgtlabs.product.config.BatchConfiguration;
+import com.xgtlabs.product.config.BatchConfigurationTest;
 import com.xgtlabs.product.config.ProductJob;
 
 /**
@@ -48,11 +52,13 @@ import com.xgtlabs.product.config.ProductJob;
  *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@ContextConfiguration(classes= {BatchConfiguration.class, ProductJob.class})
+@ContextConfiguration(classes= {BatchConfiguration.class, BatchConfigurationTest.class, ProductJob.class})
 @TestExecutionListeners( {DependencyInjectionTestExecutionListener.class, 
-	StepScopeTestExecutionListener.class } )
+	StepScopeTestExecutionListener.class,
+	DbUnitTestExecutionListener.class} )
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource("classpath:test.properties")
+@DatabaseSetup(type = DatabaseOperation.CLEAN_INSERT ,value = "sampleData.xml")
 public class ProductJobTest {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductJobTest.class);

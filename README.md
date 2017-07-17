@@ -4,6 +4,7 @@
 * Spring Batch
 * Spring Boot
 * Gradle
+* spring-test-dbunit
 
 The goal is to read database and write a csv file
 

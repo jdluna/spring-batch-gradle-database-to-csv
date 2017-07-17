@@ -46,9 +46,9 @@ public class ProductJob {
 		+ "       cait.id AS catalog_item_id, "
 		+ "       cait.item_number, "
 		+ "       cait.price "
-		+ "FROM product AS prod "
-		+ "INNER JOIN catalog_item AS cait ON prod.id = cait.fk_product_id "
-		+ "INNER JOIN genre AS genr ON cait.fk_genre_id = genr.id "
+		+ "FROM product.product AS prod "
+		+ "INNER JOIN product.catalog_item AS cait ON prod.id = cait.fk_product_id "
+		+ "INNER JOIN product.genre AS genr ON cait.fk_genre_id = genr.id "
 		+ "WHERE 1 = 1";
 	
 	@Autowired

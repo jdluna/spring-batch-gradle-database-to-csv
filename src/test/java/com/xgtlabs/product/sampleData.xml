@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	
+	<product.product id="1" description="Cardigan Sweater" product_image="cardigan.jpg" />
+	
+	<product.genre id="1" libelle="Men's" />
+	<product.genre id="2" libelle="Women's" />
+
+	<product.catalog_item id="1" item_number="QWZ5671" price="39.95" fk_genre_id="1" fk_product_id="1" />
+	<product.catalog_item id="2" item_number="RRX9856" price="39.95" fk_genre_id="2" fk_product_id="1" />
+	
+	<product.size id="1" description="Small" />
+	<product.size id="2" description="Medium" />
+	<product.size id="3" description="Large" />
+	<product.size id="4" description="Extra Large" />
+
+	<product.color_swatch id="1" image="red_cardigan.jpg" color="Red" />
+	<product.color_swatch id="2" image="burgundy_cardigan.jpg" color="Burgundy" />
+	<product.color_swatch id="3" image="navy_cardigan.jpg" color="Navy" />
+	<product.color_swatch id="4" image="black_cardigan.jpg" color="Black" />
+	<product.color_swatch id="5" image="red_cardigan.jpg" color="Red" />
+	<product.color_swatch id="6" image="red_cardigan.jpg" color="Red" />
+	
+	<product.r_catalog_size_color id="1" fk_catalog_item_id="1" fk_size_id="2" fk_color_swatch_id="1" />
+	<product.r_catalog_size_color id="2" fk_catalog_item_id="1" fk_size_id="2" fk_color_swatch_id="2" />
+	<product.r_catalog_size_color id="3" fk_catalog_item_id="1" fk_size_id="3" fk_color_swatch_id="1" />
+	<product.r_catalog_size_color id="4" fk_catalog_item_id="1" fk_size_id="3" fk_color_swatch_id="2" />
+	<product.r_catalog_size_color id="5" fk_catalog_item_id="2" fk_size_id="1" fk_color_swatch_id="1" />
+	<product.r_catalog_size_color id="6" fk_catalog_item_id="2" fk_size_id="1" fk_color_swatch_id="2" />
+	<product.r_catalog_size_color id="7" fk_catalog_item_id="2" fk_size_id="1" fk_color_swatch_id="3" />
+	<product.r_catalog_size_color id="8" fk_catalog_item_id="2" fk_size_id="2" fk_color_swatch_id="1" />
+	<product.r_catalog_size_color id="9" fk_catalog_item_id="2" fk_size_id="2" fk_color_swatch_id="2" />
+	<product.r_catalog_size_color id="10" fk_catalog_item_id="2" fk_size_id="2" fk_color_swatch_id="3" />
+	<product.r_catalog_size_color id="11" fk_catalog_item_id="2" fk_size_id="2" fk_color_swatch_id="4" />
+	<product.r_catalog_size_color id="12" fk_catalog_item_id="2" fk_size_id="4" fk_color_swatch_id="3" />
+	<product.r_catalog_size_color id="13" fk_catalog_item_id="2" fk_size_id="4" fk_color_swatch_id="4" />
+	<product.r_catalog_size_color id="14" fk_catalog_item_id="2" fk_size_id="4" fk_color_swatch_id="2" />
+	<product.r_catalog_size_color id="15" fk_catalog_item_id="2" fk_size_id="4" fk_color_swatch_id="4" />
+	
+</dataset>
